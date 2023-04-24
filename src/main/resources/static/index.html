@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fetch</title>
+</head>
+<body>
+<div>
+    <div id="result"></div>
+    <button onclick="src.close()">
+        cancel
+    </button>
+    <button onclick="connect()">
+        connect
+    </button>
+</div>
+<script>
+    let src = new EventSource("http://127.0.0.1:8080/api/v1/rx/sub")
+
+    const configEvents = (src) => {
+        src.addEventListener("message", (e) => {
+            document.getElementById("result").innerHTML += ` ${e.data}`
+        })
+
+        src.addEventListener("error", () => {
+            document.getElementById("result").innerHTML = "Conexion Cerrrada"
+            src.close()
+        })
+    }
+
+    configEvents(src)
+
+    const connect = () => {
+        document.getElementById("result").innerHTML = ""
+        src = new EventSource("http://127.0.0.1:8080/api/v1/rx/sub")
+        configEvents(src)
+    }
+</script>
+</body>
+</html>
